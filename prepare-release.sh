@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 function updateReleaseVersion() {
     RELEASE_TYPE=$1
     if [[ ${RELEASE_TYPE} == "MAJOR" ]]
@@ -9,7 +11,7 @@ function updateReleaseVersion() {
     then
         ./mvnw build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} -DgenerateBackupPoms=false
     else
-        ./mvnw build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.0 -DgenerateBackupPoms=false
+        ./mvnw build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0 -DgenerateBackupPoms=false
     fi
 }
 
@@ -49,16 +51,25 @@ fi
 CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 TYPE=$1
 
-
 if [[ ${TYPE} == "PATCH" ]]
 then
-if [[ ${CURRENT_BRANCH} == "master" ]]
+    RELEASE_BRANCH=$2
+    if [ -z ${RELEASE_BRANCH} ]
     then
-        echo "Patch not allowed at this branch"
+        echo "Release branch wasn't provided and patch is not allowed on master"
         exit 1
+    else
+        git fetch
+        if ! git checkout ${RELEASE_BRANCH}
+        then
+            echo "Provided branch does not exits!"
+            exit 1
+        fi
+        CURRENT_BRANCH=${RELEASE_BRANCH}
     fi
 fi
 
+WORKDIR=`pwd`
 TMPDIR=`mktemp -d`
 echo "Copying to ${TMPDIR}"
 
@@ -82,6 +93,7 @@ then
     git checkout -b ${BRANCH_NAME}
     git commit -am"TASK Prepare release ${RELEASE_VERSION}"
 
+    git push origin ${BRANCH_NAME}
     git checkout ${CURRENT_BRANCH}
 
     updateSnapshotVersion ${TYPE}
@@ -90,6 +102,7 @@ then
     echo Preparing next development version ${DEVELOPMENT_VERSION}
 
     git commit -am"Set next development version ${DEVELOPMENT_VERSION}"
+    git pull -r
 elif [[ ${TYPE} == "PATCH" ]]
 then
     if [[ ${CURRENT_BRANCH} != "master" ]]
@@ -98,4 +111,9 @@ then
     fi
 fi
 
+git push origin ${CURRENT_BRANCH}
 echo Build directory ${TMPDIR}
+cd ${WORKDIR}
+
+git fetch
+git checkout ${BRANCH_NAME}
