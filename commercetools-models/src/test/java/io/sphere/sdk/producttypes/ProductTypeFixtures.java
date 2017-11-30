@@ -6,7 +6,7 @@ import io.sphere.sdk.products.attributes.AttributeDefinitionBuilder;
 import io.sphere.sdk.products.attributes.ReferenceAttributeType;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.attributes.StringAttributeType;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.producttypes.commands.ProductTypeCreateCommand;
 import io.sphere.sdk.producttypes.commands.ProductTypeDeleteCommand;
 import io.sphere.sdk.producttypes.queries.ProductTypeByKeyGet;
@@ -77,7 +77,7 @@ public final class ProductTypeFixtures {
         final String name = productTypeDraft.getName();
         final PagedQueryResult<ProductType> queryResult = client.executeBlocking(ProductTypeQuery.of().byName(name));
         queryResult.getResults().forEach(productType -> {
-            final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQuery.of().byProductType(productType));
+            final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQueryApi.of().byProductType(productType));
             delete(client, pagedQueryResult.getResults());
             client.executeBlocking(ProductTypeDeleteCommand.of(productType));
 
@@ -89,7 +89,7 @@ public final class ProductTypeFixtures {
         try {
             client.executeBlocking(ProductTypeDeleteCommand.of(updated));
         } catch (final Exception e) {
-            final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQuery.of().byProductType(productType));
+            final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQueryApi.of().byProductType(productType));
             delete(client, pagedQueryResult.getResults());
             client.executeBlocking(ProductTypeDeleteCommand.of(productType));
         }

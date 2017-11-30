@@ -1,6 +1,7 @@
 package io.sphere.sdk.meta;
 
 import io.sphere.sdk.models.Base;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.queries.QueryPredicate;
 
 /**
@@ -78,10 +79,10 @@ import io.sphere.sdk.queries.QueryPredicate;
 
  {@include.example io.sphere.sdk.meta.QueryDocumentationTest#queryBySlug()}
 
- You may have noticed that the type of the query is not {@link io.sphere.sdk.products.queries.ProductQuery} anymore but {@link io.sphere.sdk.queries.QueryDsl} which does not contain the method {@link io.sphere.sdk.products.queries.ProductQuery#bySlug(io.sphere.sdk.products.ProductProjectionType, java.util.Locale, String)}.
+ You may have noticed that the type of the query is not {@link ProductQueryApi} anymore but {@link io.sphere.sdk.queries.QueryDsl} which does not contain the method {@link ProductQueryApi#bySlug(io.sphere.sdk.products.ProductProjectionType, java.util.Locale, String)}.
  That is due to the implementation of the domain specific language, but it still enables you to configure pagination and sorting.
 
- <p>Important to know is that the {@link io.sphere.sdk.queries.QueryDsl} uses immutable objects, so calling {@link io.sphere.sdk.products.queries.ProductQuery#bySlug(io.sphere.sdk.products.ProductProjectionType, java.util.Locale, String)} does not change the internal state of the {@link io.sphere.sdk.products.queries.ProductQuery}, but it creates a new {@link io.sphere.sdk.queries.QueryDsl} object with the selected predicate.</p>
+ <p>Important to know is that the {@link io.sphere.sdk.queries.QueryDsl} uses immutable objects, so calling {@link ProductQueryApi#bySlug(io.sphere.sdk.products.ProductProjectionType, java.util.Locale, String)} does not change the internal state of the {@link ProductQueryApi}, but it creates a new {@link io.sphere.sdk.queries.QueryDsl} object with the selected predicate.</p>
 
  <h4>Self constructed predicates for special cases</h4>
 
@@ -95,7 +96,7 @@ import io.sphere.sdk.queries.QueryPredicate;
 
  {@include.example io.sphere.sdk.meta.QueryDocumentationTest#testX()}
 
- <p>For creating predicates for resource &lt;RESOURCE&gt; there is a method {@code model()} in a class &lt;RESOURCE&gt;Query (e.g., Product has ProductQuery).</p>
+ <p>For creating predicates for resource &lt;RESOURCE&gt; there is a method {@code model()} in a class &lt;RESOURCE&gt;Query (e.g., Product has ProductQueryApi).</p>
 
  <h4>Connecting predicates</h4>
 

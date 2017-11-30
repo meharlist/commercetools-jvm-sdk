@@ -18,7 +18,7 @@ import io.sphere.sdk.products.commands.updateactions.*;
 import io.sphere.sdk.products.messages.ProductSlugChangedMessage;
 import io.sphere.sdk.products.messages.ProductStateTransitionMessage;
 import io.sphere.sdk.products.queries.ProductProjectionByIdGet;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.queries.PagedQueryResult;
 import io.sphere.sdk.queries.Query;
 import io.sphere.sdk.search.SearchKeyword;
@@ -1795,7 +1795,7 @@ public class ProductUpdateCommandIntegrationTest extends IntegrationTest {
                 });
 
                 //check query model
-                final ProductQuery query = ProductQuery.of()
+                final ProductQueryApi query = ProductQueryApi.of()
                         .withPredicates(m -> m.id().is(product.getId()).and(m.state().is(state)));
                 final Product productByState = client().executeBlocking(query)
                         .head().get();

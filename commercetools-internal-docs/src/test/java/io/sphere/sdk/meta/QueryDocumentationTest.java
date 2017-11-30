@@ -8,7 +8,7 @@ import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.ProductProjection;
 import io.sphere.sdk.products.expansion.ProductProjectionExpansionModel;
 import io.sphere.sdk.products.queries.ProductProjectionQuery;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.products.queries.ProductQueryModel;
 import io.sphere.sdk.queries.QueryPredicate;
 import io.sphere.sdk.queries.QuerySort;
@@ -23,24 +23,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class QueryDocumentationTest {
 
     public void queryForAllDemo() {
-        final ProductQuery query = ProductQuery.of();
+        final ProductQueryApi query = ProductQueryApi.of();
     }
 
     public void queryBySlug() {
-        final ProductQuery queryBySlug = ProductQuery.of()
+        final ProductQueryApi queryBySlug = ProductQueryApi.of()
                 .bySlug(CURRENT, ENGLISH, "blue-t-shirt");
     }
 
     public void queryByNames() {
         final QueryPredicate<Product> predicate = ProductQueryModel.of().masterData().current().name()
                 .lang(ENGLISH).isIn(asList("blue t-shirt", "blue jeans"));
-        final ProductQuery query = ProductQuery.of().withPredicates(predicate);
+        final ProductQueryApi query = ProductQueryApi.of().withPredicates(predicate);
     }
 
     public void queryByNamesDesugared() {
         final QueryPredicate<Product> predicate = ProductQueryModel.of().masterData().current().name()
                 .lang(ENGLISH).isIn(asList("blue t-shirt", "blue jeans"));
-        final ProductQuery query = ProductQuery.of().withPredicates(predicate);
+        final ProductQueryApi query = ProductQueryApi.of().withPredicates(predicate);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class QueryDocumentationTest {
         final QueryPredicate<Product> nameIsFoo = ProductQueryModel.of().masterData().current().name()
                 .lang(ENGLISH).is("foo");
         final QueryPredicate<Product> idIsBar = ProductQueryModel.of().id().is("bar");
-        final ProductQuery query = ProductQuery.of().withPredicates(nameIsFoo.or(idIsBar));
+        final ProductQueryApi query = ProductQueryApi.of().withPredicates(nameIsFoo.or(idIsBar));
     }
 
     public void predicateAndExample() {
@@ -65,14 +65,14 @@ public class QueryDocumentationTest {
         final Reference<Category> cat1 = Category.reference("cat1");
         final QueryPredicate<Product> isInCat1 = ProductQueryModel.of().masterData().current()
                 .categories().isIn(asList(cat1));
-        final ProductQuery query = ProductQuery.of().withPredicates(nameIsFoo.and(isInCat1));
+        final ProductQueryApi query = ProductQueryApi.of().withPredicates(nameIsFoo.and(isInCat1));
     }
 
     public void predicateAndWithWhereExample() {
         final Reference<Category> cat1 = Category.reference("cat1");
         final QueryPredicate<Product> nameIsFooAndIsInCat1 = ProductQueryModel.of().masterData().current()
                 .where(cur -> cur.name().lang(ENGLISH).is("foo").and(cur.categories().isIn(asList(cat1))));
-        final ProductQuery query = ProductQuery.of().withPredicates(nameIsFooAndIsInCat1);
+        final ProductQueryApi query = ProductQueryApi.of().withPredicates(nameIsFooAndIsInCat1);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class QueryDocumentationTest {
 
     @Test
     public void notSyntax() throws Exception {
-        final ProductQuery query = ProductQuery.of()
+        final ProductQueryApi query = ProductQueryApi.of()
                 .withPredicates(m -> m.not(m.masterData().current().name().lang(ENGLISH).is("foo")));
         assertThat(query.predicates()).isEqualTo(asList(QueryPredicate.of("not(masterData(current(name(en=\"foo\"))))")));
     }
@@ -93,14 +93,14 @@ public class QueryDocumentationTest {
     public void sortByName() {
         final QuerySort<Product> byNameAsc = ProductQueryModel.of().masterData().current().name()
                 .lang(ENGLISH).sort().asc();
-        final ProductQuery query = ProductQuery.of().withSort(asList(byNameAsc));
+        final ProductQueryApi query = ProductQueryApi.of().withSort(asList(byNameAsc));
     }
 
     public void sortByNameAscAndIdDesc() {
         final QuerySort<Product> byNameAsc = ProductQueryModel.of().masterData().current().name()
                 .lang(ENGLISH).sort().asc();
         final QuerySort<Product> byIdDesc = ProductQueryModel.of().id().sort().by(DESC);
-        final ProductQuery query = ProductQuery.of().withSort(asList(byNameAsc, byIdDesc));
+        final ProductQueryApi query = ProductQueryApi.of().withSort(asList(byNameAsc, byIdDesc));
     }
 
     @Test
@@ -112,22 +112,22 @@ public class QueryDocumentationTest {
     }
 
     public void queryAllExampleInPaginationContext() {
-        final ProductQuery query = ProductQuery.of();
+        final ProductQueryApi query = ProductQueryApi.of();
     }
 
     public void limitProductQueryTo4() {
-        final ProductQuery query = ProductQuery.of().withLimit(4L);
+        final ProductQueryApi query = ProductQueryApi.of().withLimit(4L);
     }
 
     @Test
     public void limitProductQueryTo4PlusOffset4() {
-        final ProductQuery queryForFirst4 = ProductQuery.of().withLimit(4L);
-        final ProductQuery queryForProductId04to07 = queryForFirst4.withOffset(4L);
-        assertThat(queryForProductId04to07).isEqualTo(ProductQuery.of().withLimit(4L).withOffset(4L));
+        final ProductQueryApi queryForFirst4 = ProductQueryApi.of().withLimit(4L);
+        final ProductQueryApi queryForProductId04to07 = queryForFirst4.withOffset(4L);
+        assertThat(queryForProductId04to07).isEqualTo(ProductQueryApi.of().withLimit(4L).withOffset(4L));
     }
 
     public void expandProductTypeForProduct() {
-        final ProductQuery query = ProductQuery.of()
+        final ProductQueryApi query = ProductQueryApi.of()
                 .withExpansionPaths(m -> m.productType());
     }
 

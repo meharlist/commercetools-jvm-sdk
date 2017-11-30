@@ -9,7 +9,7 @@ import io.sphere.sdk.products.commands.ProductDeleteCommand;
 import io.sphere.sdk.products.commands.ProductUpdateCommand;
 import io.sphere.sdk.products.commands.updateactions.AddPrice;
 import io.sphere.sdk.products.commands.updateactions.RemovePrice;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.producttypes.commands.ProductTypeCreateCommand;
 import io.sphere.sdk.producttypes.queries.ProductTypeQuery;
@@ -71,15 +71,15 @@ public class ProductCrudIntegrationTest extends IntegrationTest {
     }
 
     protected SphereRequest<PagedQueryResult<Product>> queryRequestForQueryAll() {
-        return ProductQuery.of();
+        return ProductQueryApi.of();
     }
 
     protected SphereRequest<PagedQueryResult<Product>> queryObjectForName(final String name) {
-        return ProductQuery.of().withPredicates(m -> m.masterData().current().name().lang(ENGLISH).is(name));
+        return ProductQueryApi.of().withPredicates(m -> m.masterData().current().name().lang(ENGLISH).is(name));
     }
 
     protected SphereRequest<PagedQueryResult<Product>> queryObjectForNames(final List<String> names) {
-        return ProductQuery.of().withPredicates(m -> m.masterData().current().name().lang(ENGLISH).isIn(names));
+        return ProductQueryApi.of().withPredicates(m -> m.masterData().current().name().lang(ENGLISH).isIn(names));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ProductCrudIntegrationTest extends IntegrationTest {
                 .build();
         final ProductDraft productDraft = ProductDraftBuilder.of(productType, en("foo"), en("foo-slug"), masterVariant).build();
         client().executeBlocking(ProductCreateCommand.of(productDraft));
-        final PagedQueryResult<Product> result = client().executeBlocking(ProductQuery.of().bySku(sku, STAGED));
+        final PagedQueryResult<Product> result = client().executeBlocking(ProductQueryApi.of().bySku(sku, STAGED));
         assertThat(result.getResults()).hasSize(1);
         assertThat(result.getResults().get(0).getMasterData().getStaged().getMasterVariant().getSku()).contains(sku);
         assertThat(result.getResults().get(0).getMasterData().getStaged().getMasterVariant().findAttribute(Colors.ATTRIBUTE)).contains(Colors.GREEN);

@@ -4,7 +4,7 @@ import io.sphere.sdk.models.LocalizedString;
 import io.sphere.sdk.products.*;
 import io.sphere.sdk.products.attributes.*;
 import io.sphere.sdk.products.commands.ProductCreateCommand;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.producttypes.ProductTypeDraft;
 import io.sphere.sdk.producttypes.commands.ProductTypeCreateCommand;
@@ -70,7 +70,7 @@ public class ProductProjectionSearchIntegrationTest extends IntegrationTest {
         evilProductType = client().executeBlocking(ProductTypeQuery.of().byName(EVIL_PRODUCT_TYPE_NAME)).head()
                 .orElseGet(() -> createEvilProductType());
 
-        final Query<Product> query = ProductQuery.of()
+        final Query<Product> query = ProductQueryApi.of()
                 .withPredicates(product -> product.masterData().staged().masterVariant().sku().isIn(asList(SKU1, SKU2, SKU3, SKU_A, SKU_B)));
         final List<Product> products = client().executeBlocking(query).getResults();
 

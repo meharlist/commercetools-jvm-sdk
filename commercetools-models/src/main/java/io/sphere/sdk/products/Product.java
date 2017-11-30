@@ -8,6 +8,7 @@ import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.models.Resource;
 import io.sphere.sdk.productdiscounts.ProductDiscount;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.reviews.Review;
 import io.sphere.sdk.reviews.ReviewRatingStatistics;
 import io.sphere.sdk.states.State;
@@ -24,7 +25,7 @@ import java.util.Optional;
  @see io.sphere.sdk.products.commands.ProductCreateCommand
  @see io.sphere.sdk.products.commands.ProductUpdateCommand
  @see io.sphere.sdk.products.commands.ProductDeleteCommand
- @see io.sphere.sdk.products.queries.ProductQuery
+ @see ProductQueryApi
  @see io.sphere.sdk.products.queries.ProductByIdGet
  @see io.sphere.sdk.products.queries.ProductByKeyGet
  @see io.sphere.sdk.products.ProductProjection

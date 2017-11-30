@@ -20,7 +20,7 @@ public class QueryAllIntegrationTest extends QueryAllBase {
 
     @Test
     public void useIdPredicateInsteadOfOffset() throws Exception {
-        final ProductQuery seedQuery = ProductQuery.of()
+        final ProductQueryApi seedQuery = ProductQueryApi.of()
                 //the original predicate, which queries products for a certain product type
                 //the idea works also for no predicate to get all products
                 .withPredicates(m -> m.productType().is(productType))
@@ -36,7 +36,7 @@ public class QueryAllIntegrationTest extends QueryAllBase {
         assertThat(javaSortedActual).isEqualTo(createdProducts);
     }
 
-    private CompletionStage<List<Product>> findNext(final ProductQuery seedQuery, final ProductQuery query, final List<Product> products) {
+    private CompletionStage<List<Product>> findNext(final ProductQueryApi seedQuery, final ProductQueryApi query, final List<Product> products) {
         final CompletionStage<PagedQueryResult<Product>> pageResult = sphereClient().execute(query);
         return pageResult.thenCompose(page -> {
             final List<Product> results = page.getResults();

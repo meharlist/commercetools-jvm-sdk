@@ -51,7 +51,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
     }
 
     private void checkIsFoundByPublishedFlag(final Product product, final boolean value) {
-        final Optional<Product> productFromQuery = client().executeBlocking(ProductQuery.of()
+        final Optional<Product> productFromQuery = client().executeBlocking(ProductQueryApi.of()
                 .withPredicates(m -> {
                     return m.masterData().isPublished().is(value);
                 })
@@ -114,7 +114,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
     @Test
     public void queryProductsWithAnyDiscount() throws Exception {
         withUpdateableProductDiscount(client(), (ProductDiscount productDiscount, Product product) -> {
-            final ProductQuery query = ProductQuery.of()
+            final ProductQueryApi query = ProductQueryApi.of()
                     .withPredicates(m -> m.id().is(product.getId())
                             .and(m.masterData().staged().masterVariant().prices().discounted().isPresent()));
             final Duration maxWaitTime = Duration.ofMinutes(2);
@@ -133,7 +133,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
         CustomerGroupFixtures.withB2cCustomerGroup(client(), customerGroup ->
             ProductFixtures.withProductType(client(), randomString(), productType ->
                 withProduct(client(), new VariantsCottonTShirtProductDraftSupplier(productType, randomString(), customerGroup), product -> {
-                    final PagedQueryResult<Product> result = client().executeBlocking(ProductQuery.of()
+                    final PagedQueryResult<Product> result = client().executeBlocking(ProductQueryApi.of()
                             .withPredicates(m -> m.id().is(product.getId()))
                             .withExpansionPaths(m -> m.masterData().staged().variants().prices().customerGroup())
                             .withLimit(1L));
@@ -152,7 +152,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
             withReview(client(), b -> b.target(product).rating(1), review1 -> {
                 withReview(client(), b -> b.target(product).rating(3), review2 -> {
                     assertEventually(() -> {
-                        final ProductQuery query = ProductQuery.of()
+                        final ProductQueryApi query = ProductQueryApi.of()
                                 .withPredicates(m -> m.reviewRatingStatistics().averageRating().is(2.0))
                                 .plusPredicates(m -> m.reviewRatingStatistics().count().is(2))
                                 .plusPredicates(m -> m.is(product));
@@ -170,7 +170,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
     @Test
     public void queryByTiersWithMinimumQuantity() {
         withProduct(client(), product -> {
-            final ProductQuery productQuery = ProductQuery.of()
+            final ProductQueryApi productQuery = ProductQueryApi.of()
                     .withPredicates(m -> m.masterData().current().variants().prices().tiers().minimumQuantity().isGreaterThan(5))
                     .plusPredicates(m -> m.is(product));
 
@@ -182,7 +182,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
     @Test
     public void queryByTiersWithValue() {
         withProduct(client(), product -> {
-            final ProductQuery productQuery = ProductQuery.of()
+            final ProductQueryApi productQuery = ProductQueryApi.of()
                     .withPredicates(m -> m.masterData().current().variants().prices().tiers().value().currencyCode().is("EUR"))
                     .plusPredicates(m -> m.is(product));
 
@@ -191,7 +191,7 @@ public class ProductQueryIntegrationTest extends IntegrationTest {
         });
     }
 
-    private ProductQuery query(final Product product) {
-        return ProductQuery.of().withPredicates(m -> m.id().is(product.getId()));
+    private ProductQueryApi query(final Product product) {
+        return ProductQueryApi.of().withPredicates(m -> m.id().is(product.getId()));
     }
 }

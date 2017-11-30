@@ -530,7 +530,7 @@ import java.util.function.Function;
  <li class=new-in-release>added {@link PriceSelection} for
  {@link ProductProjectionQuery#withPriceSelection(PriceSelection)},
  {@link ProductByIdGet#withPriceSelection(PriceSelection)},
- {@link ProductQuery#withPriceSelection(PriceSelection)},
+ {@link ProductQueryApi#withPriceSelection(PriceSelection)},
  {@link ProductProjectionByIdGet#withPriceSelection(PriceSelection)},
  {@link io.sphere.sdk.products.commands.ProductUpdateCommand#withPriceSelection(PriceSelection)}  </li>
  <li class=new-in-release>added anonymousId to {@link Order#getAnonymousId()},
@@ -1115,7 +1115,7 @@ PagedSearchResult<ProductProjection> result = client.execute(search);
  <li class=new-in-release>Added documentation how to query for large offsets in {@link QueryDocumentation}.</li>
  <li class=new-in-release>Added hints how to format date and monetary data in {@link FormattingDocumentation}.</li>
  <li class=new-in-release>Added {@link io.sphere.sdk.producttypes.commands.ProductTypeUpdateCommand}.</li>
- <li class=new-in-release>To imrove the query speed the calculation of the total amount of items in commercetools platform can be deactivated with {@link io.sphere.sdk.products.queries.ProductQuery#withFetchTotal(boolean)}.</li>
+ <li class=new-in-release>To imrove the query speed the calculation of the total amount of items in commercetools platform can be deactivated with {@link ProductQueryApi#withFetchTotal(boolean)}.</li>
  <li class=new-in-release>{@link QueryPredicate}s can be negated with {@link QueryPredicate#negate()}</li>
  <li class=new-in-release>Added {@link io.sphere.sdk.carts.CartState#ORDERED} and {@link Order#getCart()}.</li>
  <li class=new-in-release>Added {@code io.sphere.sdk.products.ProductProjection#findVariantBySky(String)}.</li>

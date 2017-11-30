@@ -6,7 +6,7 @@ import io.sphere.sdk.models.*;
 import io.sphere.sdk.products.attributes.*;
 import io.sphere.sdk.products.commands.ProductCreateCommand;
 import io.sphere.sdk.products.commands.ProductDeleteCommand;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.producttypes.ProductTypeDraft;
 import io.sphere.sdk.producttypes.commands.ProductTypeCreateCommand;
@@ -167,7 +167,7 @@ public class ProductsScenario1Fixtures {
         final ProductType productType = client.executeBlocking(ProductTypeQuery.of().byName(PRODUCT_TYPE_NAME)).head()
                 .orElseGet(() -> createProductType(client));
 
-        final Query<Product> query = ProductQuery.of()
+        final Query<Product> query = ProductQueryApi.of()
                 .withPredicates(m -> m.masterData().staged().masterVariant().sku().isIn(asList(SKU1, SKU2, SKU_SOME_ID, SKU_OTHER_ID)));
         final List<Product> products = client.executeBlocking(query).getResults();
 

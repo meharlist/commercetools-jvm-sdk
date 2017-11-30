@@ -18,7 +18,7 @@ import io.sphere.sdk.products.commands.ProductDeleteCommand;
 import io.sphere.sdk.products.commands.ProductUpdateCommand;
 import io.sphere.sdk.products.commands.updateactions.SetAttribute;
 import io.sphere.sdk.products.queries.ProductProjectionQuery;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.producttypes.ProductTypeDraft;
 import io.sphere.sdk.producttypes.commands.ProductTypeCreateCommand;
@@ -76,7 +76,7 @@ public class ProductTypeCreationDemoIntegrationTest extends IntegrationTest {
     public static void deleteProductsAndProductType() {
         final List<ProductType> productTypes = client().executeBlocking(ProductTypeQuery.of().byName(PRODUCT_TYPE_NAME)).getResults();
         if (!productTypes.isEmpty()) {
-            final ProductQuery productQuery = ProductQuery.of()
+            final ProductQueryApi productQuery = ProductQueryApi.of()
                     .withPredicates(m -> m.productType().isIn(productTypes))
                     .withLimit(500L);
             client().executeBlocking(productQuery).getResults().forEach(p -> client().executeBlocking(ProductDeleteCommand.of(p)));

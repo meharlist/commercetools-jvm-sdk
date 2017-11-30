@@ -1,6 +1,8 @@
 package io.sphere.sdk.products.queries;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.sphere.sdk.api.internal.CtFuture;
+import io.sphere.sdk.client.SphereClient;
 import io.sphere.sdk.models.Referenceable;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.ProductProjectionType;
@@ -14,7 +16,7 @@ import java.util.Locale;
 /**
  {@doc.gen summary products}
  */
-public interface ProductQuery extends MetaModelQueryDsl<Product, ProductQuery, ProductQueryModel, ProductExpansionModel<Product>>, PriceSelectionRequestDsl<ProductQuery> {
+public interface ProductQueryApi extends MetaModelQueryDsl<Product, ProductQueryApi, ProductQueryModel, ProductExpansionModel<Product>>, PriceSelectionRequestDsl<ProductQueryApi> ,CtFuture<PagedQueryResult<Product>>{
     /**
      * Creates a container which contains the full Java type information to deserialize the query result (NOT this class) from JSON.
      *
@@ -34,19 +36,22 @@ public interface ProductQuery extends MetaModelQueryDsl<Product, ProductQuery, P
         };
     }
 
-    static ProductQuery of() {
-        return new ProductQueryImpl();
+    static ProductQueryApi of() {
+        return new ProductQueryImpl(null);
     }
 
-    default ProductQuery bySlug(final ProductProjectionType type, final Locale locale, final String slug) {
+    static ProductQueryApi of(SphereClient sphereClient){
+        return new ProductQueryImpl(sphereClient);
+    }
+    default ProductQueryApi bySlug(final ProductProjectionType type, final Locale locale, final String slug) {
         return withPredicates(m -> m.masterData().forProjection(type).slug().lang(locale).is(slug));
     }
 
-    default ProductQuery byProductType(final Referenceable<ProductType> productType) {
+    default ProductQueryApi byProductType(final Referenceable<ProductType> productType) {
         return withPredicates(m -> m.productType().is(productType));
     }
 
-    default ProductQuery bySku(final String sku, final ProductProjectionType type) {
+    default ProductQueryApi bySku(final String sku, final ProductProjectionType type) {
         final QueryPredicate<EmbeddedProductVariantQueryModel> skuPredicate = EmbeddedProductVariantQueryModel.of().sku().is(sku);
         final ProductDataQueryModel<Product> projection = ProductQueryModel.of().masterData().forProjection(type);
         final QueryPredicate<Product> masterVariantSkuPredicate = projection.masterVariant().where(skuPredicate);

@@ -18,7 +18,7 @@ import io.sphere.sdk.products.commands.ProductDeleteCommand;
 import io.sphere.sdk.products.commands.ProductUpdateCommand;
 import io.sphere.sdk.products.commands.updateactions.*;
 import io.sphere.sdk.products.queries.ProductByIdGet;
-import io.sphere.sdk.products.queries.ProductQuery;
+import io.sphere.sdk.products.queries.ProductQueryApi;
 import io.sphere.sdk.products.queries.ProductQueryModel;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.producttypes.ProductTypeFixtures;
@@ -125,7 +125,7 @@ public class ProductFixtures {
         final ProductVariantDraft variantDraft = ProductVariantDraftBuilder.of().price(PRICE).build();
         final String slugEn = "referenceable-product-2";
         final ProductDraft productDraft = ProductDraftBuilder.of(productType, en("referenceable product"), en(slugEn), variantDraft).build();
-        return client.executeBlocking(ProductQuery.of().bySlug(ProductProjectionType.STAGED, ENGLISH, slugEn)).head()
+        return client.executeBlocking(ProductQueryApi.of().bySlug(ProductProjectionType.STAGED, ENGLISH, slugEn)).head()
                 .orElseGet(() -> client.executeBlocking(ProductCreateCommand.of(productDraft)));
     }
 
@@ -146,7 +146,7 @@ public class ProductFixtures {
     public static void withUpdateableProduct(final BlockingSphereClient client, final Supplier<? extends ProductDraft> creator, final Function<Product, Product> user) {
         final ProductDraft productDraft = creator.get();
         final String slug = englishSlugOf(productDraft);
-        final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQuery.of().bySlug(ProductProjectionType.CURRENT, Locale.ENGLISH, slug));
+        final PagedQueryResult<Product> pagedQueryResult = client.executeBlocking(ProductQueryApi.of().bySlug(ProductProjectionType.CURRENT, Locale.ENGLISH, slug));
         delete(client, pagedQueryResult.getResults());
         final Product product = client.executeBlocking(ProductCreateCommand.of(productDraft));
         final Product possiblyUpdateProduct = user.apply(product);
@@ -232,7 +232,7 @@ public class ProductFixtures {
 
         if (productType != null) {
             QueryPredicate<Product> ofProductType = ProductQueryModel.of().productType().is(productType);
-            ProductQuery productsOfProductTypeQuery = ProductQuery.of().withPredicates(ofProductType).withLimit(500L);
+            ProductQueryApi productsOfProductTypeQuery = ProductQueryApi.of().withPredicates(ofProductType).withLimit(500L);
             do {
                 final List<Product> products = client.executeBlocking(productsOfProductTypeQuery).getResults();
                 final List<Product> unpublishedProducts = products.stream().map(

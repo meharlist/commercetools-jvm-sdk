@@ -120,7 +120,7 @@ public class PriceSelectionIntegrationTest extends IntegrationTest {
     public void selectAPriceByCurrencyInProductQuery() {
         final List<PriceDraft> prices = asList(PriceDraft.of(EURO_30), PriceDraft.of(USD_20));
         withProductOfPrices(prices, product -> {
-            final ProductQuery request = ProductQuery.of()
+            final ProductQueryApi request = ProductQueryApi.of()
                     .withPredicates(m -> m.id().is(product.getId()))//to limit the test scope
                     .withPriceSelection(PriceSelection.of(EUR));//price selection config
             final PagedQueryResult<Product> result = client().executeBlocking(request);

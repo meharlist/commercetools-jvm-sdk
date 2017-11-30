@@ -15,14 +15,14 @@ import java.util.function.Function;
  {@doc.gen summary }
 
  */
-public final class ProductQueryBuilder extends ResourceMetaModelQueryDslBuilderImpl<ProductQueryBuilder, Product, ProductQuery, ProductQueryModel, ProductExpansionModel<Product>> {
+public final class ProductQueryBuilder extends ResourceMetaModelQueryDslBuilderImpl<ProductQueryBuilder, Product, ProductQueryApi, ProductQueryModel, ProductExpansionModel<Product>> {
 
-    private ProductQueryBuilder(final ProductQuery template) {
+    private ProductQueryBuilder(final ProductQueryApi template) {
         super(template);
     }
 
     public static ProductQueryBuilder of() {
-        return new ProductQueryBuilder(ProductQuery.of());
+        return new ProductQueryBuilder(ProductQueryApi.of());
     }
 
     @Override
@@ -31,7 +31,7 @@ public final class ProductQueryBuilder extends ResourceMetaModelQueryDslBuilderI
     }
 
     @Override
-    public ProductQuery build() {
+    public ProductQueryApi build() {
         return super.build();
     }
 
