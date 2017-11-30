@@ -20,6 +20,7 @@ public class ApiIntegrationTest extends IntegrationTest {
 
         CtApi api = CtApi.of(client());
 
+
 //        api.create()
 //                .product(null, null, null, new ArrayList<>())
 //                .plusVariants(ProductVariantDraftBuilder.of().images(Image.of()))
@@ -31,17 +32,16 @@ public class ApiIntegrationTest extends IntegrationTest {
 //                .toObservable(Single::fromFuture)
 //                .subscribe(product -> System.out.println(product), error -> System.out.println(error));
 
-        Flowable<Product> products =  api.query().product().withOffset(500).toFlowable()
-                .takeWhile(productPagedQueryResult -> productPagedQueryResult.getCount() > 0)
-                .flatMapIterable(PagedQueryResult::getResults);
-
-
-        api.query().product().withOffset(500).toObservable(Single::fromFuture).blockingGet()
-        TestSubscriber<Product> testSubscriber = new TestSubscriber<>();
-        testSubscriber.assertNotSubscribed();
-        products.subscribe(testSubscriber);
-        testSubscriber.assertSubscribed();
-        testSubscriber.assertValueCount(4);
+//        Flowable<Product> products =  api.query().product().withOffset(500).toFlowable()
+//                .takeWhile(productPagedQueryResult -> productPagedQueryResult.getCount() > 0)
+//                .flatMapIterable(PagedQueryResult::getResults);
+//
+//
+//        TestSubscriber<Product> testSubscriber = new TestSubscriber<>();
+//        testSubscriber.assertNotSubscribed();
+//        products.subscribe(testSubscriber);
+//        testSubscriber.assertSubscribed();
+//        testSubscriber.assertValueCount(4);
 
 
 //        do add search and update Action
