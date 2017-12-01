@@ -33,5 +33,9 @@ public interface CtPublisher<T> extends Publisher<T>{
         Flowable.fromFuture(sphereClient.execute(sphereRequest).toCompletableFuture()).subscribe(s);
     }
 
+    default Flowable<T> toFlowable(){
+        return Flowable.fromPublisher(this);
+    }
+
 
 }

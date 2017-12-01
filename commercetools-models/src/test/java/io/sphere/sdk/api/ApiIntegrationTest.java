@@ -2,8 +2,6 @@ package io.sphere.sdk.api;
 
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableContainer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 import io.sphere.sdk.client.SphereClient;
@@ -29,7 +27,7 @@ public class ApiIntegrationTest extends IntegrationTest {
 
     public static CtApi api = CtApi.of(client());
 
-    public static Flowable<Product> products = Flowable.fromPublisher(api.query().product()).flatMapIterable(PagedQueryResult::getResults);
+    public static Flowable<Product> products = api.query().product().toFlowable().flatMapIterable(PagedQueryResult::getResults);
 
     public static File image = new File(ClassLoader.getSystemResource("ct_logo_farbe.gif").getFile());
 
@@ -51,7 +49,7 @@ public class ApiIntegrationTest extends IntegrationTest {
 
 
         testFixture(client(),((productType, draftSupplier) -> {
-
+                    CompositeDisposable compositeDisposable = new CompositeDisposable();
                     Flowable.range(0,10)
                             .flatMap(i ->
                                     api.create().product(productType.toResourceIdentifier(), LocalizedString.ofEnglish("Shirts_"+randomKey()), randomSlug(), draftSupplier.get().getVariants())
@@ -65,7 +63,9 @@ public class ApiIntegrationTest extends IntegrationTest {
 
                     testSubscriber.assertSubscribed();
                     testSubscriber.assertValueCount(10);
+                    compositeDisposable.dispose();
                 }));
+
 
 
     }
@@ -78,10 +78,10 @@ public class ApiIntegrationTest extends IntegrationTest {
                     creat10Products(productType,draftSupplier);
 
                     //Execute Upload command
-                            Flowable.fromPublisher(api.query().product())
-                                    .flatMapIterable(PagedQueryResult::getResults)
-                                    .flatMap( product -> api.command().product(product).uploadImage(image))
-                                    .blockingSubscribe(product -> System.out.println());
+                    Flowable.fromPublisher(api.query().product())
+                            .flatMapIterable(PagedQueryResult::getResults)
+                            .flatMap( product -> api.command().product(product).uploadImage(image))
+                            .blockingSubscribe(product -> System.out.println());
 
 
                     TestSubscriber<Product> testSubscriber = new TestSubscriber<>();
@@ -128,11 +128,10 @@ public class ApiIntegrationTest extends IntegrationTest {
             creat10Products(productType,draftSupplier);
              products
                     .flatMap(
-                    product ->   api.update()
-                                    .product(product)
-                                    .changeName(LocalizedString.ofEnglish("NewName"))
-                                    .setKey(randomKey())
-                                    .publish()
+                        product ->   api.update()
+                                        .product(product)
+                                        .changeName(LocalizedString.ofEnglish("NewName"))
+                                        .setKey(randomKey())
 
             ).subscribe();
 
@@ -140,7 +139,6 @@ public class ApiIntegrationTest extends IntegrationTest {
             testSubscriber.assertNotSubscribed();
 
             products.subscribe(testSubscriber);
-
             testSubscriber.assertSubscribed();
             testSubscriber.assertValueCount(10);
             testSubscriber.assertValueAt(0,
