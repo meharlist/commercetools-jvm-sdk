@@ -1,19 +1,24 @@
 package io.sphere.sdk.products.commands;
 
 import com.fasterxml.jackson.databind.JavaType;
+import io.sphere.sdk.api.internal.CtPublisher;
 import io.sphere.sdk.client.HttpRequestIntent;
+import io.sphere.sdk.client.SphereClient;
+import io.sphere.sdk.client.SphereRequest;
 import io.sphere.sdk.commands.CommandImpl;
 import io.sphere.sdk.http.HttpMethod;
 import io.sphere.sdk.http.UrlQueryBuilder;
 import io.sphere.sdk.json.SphereJsonUtils;
 import io.sphere.sdk.products.ByIdVariantIdentifier;
 import io.sphere.sdk.products.Product;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -25,10 +30,14 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  * Example usage executing the command:
  * {@include.example io.sphere.sdk.products.commands.ProductImageUploadCommandIntegrationTest#uploadImage()}
  */
-public final class ProductImageUploadCommand extends CommandImpl<Product> {
+public final class ProductImageUploadCommand extends CommandImpl<Product> implements CtPublisher<Product> {
+
+    private final SphereClient sphereClient;
+
     private final String productId;
     @Nullable
     private final Integer variant;
+
     @Nullable
     private final String sku;
     @Nullable
@@ -53,7 +62,7 @@ public final class ProductImageUploadCommand extends CommandImpl<Product> {
     }
 
     private ProductImageUploadCommand(final File body, final String productId, final Integer variant, final String sku,
-                                      final String filename, final Boolean staged, final String givenContentType) {
+                                      final String filename, final Boolean staged, final String givenContentType,final SphereClient sphereClient) {
         this.productId = productId;
         this.variant = variant;
         this.sku = sku;
@@ -61,26 +70,51 @@ public final class ProductImageUploadCommand extends CommandImpl<Product> {
         this.staged = staged;
         this.body = body;
         this.givenContentType = givenContentType;
+        this.sphereClient = sphereClient;
     }
 
+    public static ProductImageUploadCommand ofMasterVariant(final File body, final String productId,final SphereClient sphereClient) {
+        return new ProductImageUploadCommand(body, productId, null, null, null, null, null,sphereClient);
+    }
+
+    public static ProductImageUploadCommand ofProductIdAndSku(final File body, final String productId, final String sku,final SphereClient sphereClient) {
+        return new ProductImageUploadCommand(body, productId, null, sku, null, null, null,sphereClient);
+    }
+
+    public static ProductImageUploadCommand ofVariantId(final File body, final ByIdVariantIdentifier variantIdentifier,final SphereClient sphereClient) {
+        return new ProductImageUploadCommand(body, variantIdentifier.getProductId(), variantIdentifier.getVariantId(), null, null, null, null,sphereClient);
+    }
+
+    public ProductImageUploadCommand withFilename(final String newFilename,final SphereClient sphereClient) {
+        return new ProductImageUploadCommand(body, productId, variant, sku, newFilename, staged, givenContentType,sphereClient);
+    }
+
+    public ProductImageUploadCommand withStaged(final Boolean newStaged,final SphereClient sphereClient) {
+        return new ProductImageUploadCommand(body, productId, variant, sku, filename, newStaged, givenContentType,sphereClient);
+    }
+
+
+
+
+
     public static ProductImageUploadCommand ofMasterVariant(final File body, final String productId) {
-        return new ProductImageUploadCommand(body, productId, null, null, null, null, null);
+        return new ProductImageUploadCommand(body, productId, null, null, null, null, null,null);
     }
 
     public static ProductImageUploadCommand ofProductIdAndSku(final File body, final String productId, final String sku) {
-        return new ProductImageUploadCommand(body, productId, null, sku, null, null, null);
+        return new ProductImageUploadCommand(body, productId, null, sku, null, null, null,null);
     }
 
     public static ProductImageUploadCommand ofVariantId(final File body, final ByIdVariantIdentifier variantIdentifier) {
-        return new ProductImageUploadCommand(body, variantIdentifier.getProductId(), variantIdentifier.getVariantId(), null, null, null, null);
+        return new ProductImageUploadCommand(body, variantIdentifier.getProductId(), variantIdentifier.getVariantId(), null, null, null, null,null);
     }
 
     public ProductImageUploadCommand withFilename(final String newFilename) {
-        return new ProductImageUploadCommand(body, productId, variant, sku, newFilename, staged, givenContentType);
+        return new ProductImageUploadCommand(body, productId, variant, sku, newFilename, staged, givenContentType,null);
     }
 
     public ProductImageUploadCommand withStaged(final Boolean newStaged) {
-        return new ProductImageUploadCommand(body, productId, variant, sku, filename, newStaged, givenContentType);
+        return new ProductImageUploadCommand(body, productId, variant, sku, filename, newStaged, givenContentType,null);
     }
 
     /**
@@ -90,7 +124,7 @@ public final class ProductImageUploadCommand extends CommandImpl<Product> {
      * @return ProductImageUploadCommand the new constructed productImageUploadCommand
      */
     public ProductImageUploadCommand withContentType(final String contentType) {
-        final ProductImageUploadCommand productImageUploadCommand = new ProductImageUploadCommand(body, productId, variant, sku, filename, staged, givenContentType);
+        final ProductImageUploadCommand productImageUploadCommand = new ProductImageUploadCommand(body, productId, variant, sku, filename, staged, givenContentType,sphereClient);
 
         return productImageUploadCommand;
     }
@@ -136,5 +170,11 @@ public final class ProductImageUploadCommand extends CommandImpl<Product> {
         }
         final String path = String.format("/products/%s/images%s", productId, builder.toStringWithOptionalQuestionMark());
         return HttpRequestIntent.of(HttpMethod.POST, path, body, contentType);
+    }
+
+
+    @Override
+    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
+        return () -> Pair.of(sphereClient,this);
     }
 }

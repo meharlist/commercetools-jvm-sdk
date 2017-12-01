@@ -1,7 +1,7 @@
 package io.sphere.sdk.products.queries;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.sphere.sdk.api.internal.CtFuture;
+import io.sphere.sdk.api.internal.CtPublisher;
 import io.sphere.sdk.client.SphereClient;
 import io.sphere.sdk.models.Referenceable;
 import io.sphere.sdk.products.Product;
@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  {@doc.gen summary products}
  */
-public interface ProductQueryApi extends MetaModelQueryDsl<Product, ProductQueryApi, ProductQueryModel, ProductExpansionModel<Product>>, PriceSelectionRequestDsl<ProductQueryApi> ,CtFuture<PagedQueryResult<Product>>{
+public interface ProductQueryApi extends MetaModelQueryDsl<Product, ProductQueryApi, ProductQueryModel, ProductExpansionModel<Product>>, PriceSelectionRequestDsl<ProductQueryApi> ,CtPublisher<PagedQueryResult<Product>> {
     /**
      * Creates a container which contains the full Java type information to deserialize the query result (NOT this class) from JSON.
      *

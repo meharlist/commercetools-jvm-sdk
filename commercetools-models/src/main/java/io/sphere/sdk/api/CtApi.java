@@ -9,6 +9,7 @@ public interface CtApi extends SphereClientContainer {
         return new CtApiImpl(sphereClient);
     }
 
+    //CRUD operations
     default CreateApi create(){
         return new CreateApiImpl(getSphereClient());
     }
@@ -25,9 +26,17 @@ public interface CtApi extends SphereClientContainer {
         return new QueryApiImpl(getSphereClient());
     }
 
+    //Extension for CRUD operations
     default SearchApi search(){
         return new SearchApiImpl(getSphereClient());
     }
+
+
+    //Some Commands that arent easily interpreted as updates for ex request new password
+    default CommandApi command(){
+        return new CommandApiImpl(getSphereClient());
+    }
+
 
 
 

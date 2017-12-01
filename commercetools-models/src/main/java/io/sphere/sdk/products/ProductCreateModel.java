@@ -1,27 +1,25 @@
 package io.sphere.sdk.products;
 
-import com.sun.deploy.util.SessionState;
-import io.sphere.sdk.api.internal.CtFuture;
+import io.sphere.sdk.api.internal.CtPublisher;
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.client.SphereClient;
+import io.sphere.sdk.client.SphereRequest;
 import io.sphere.sdk.models.*;
-import io.sphere.sdk.products.CategoryOrderHints;
-import io.sphere.sdk.products.ProductCreateModel;
-import io.sphere.sdk.products.ProductVariantDraft;
 import io.sphere.sdk.products.commands.ProductCreateCommand;
 import io.sphere.sdk.producttypes.ProductType;
 import io.sphere.sdk.search.SearchKeywords;
 import io.sphere.sdk.states.State;
 import io.sphere.sdk.taxcategories.TaxCategory;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.Future;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static io.sphere.sdk.utils.SphereInternalUtils.listOf;
 
-public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCreateModel> implements CtFuture<Product>{
+public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCreateModel> implements CtPublisher<Product> {
 
     private final SphereClient  sphereClient;
 
@@ -56,7 +54,7 @@ public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCre
     }
 
     public static ProductCreateModel of(final SphereClient sphereClient,
-                                         final ResourceIdentifiable<ProductType> productType,
+                                         final ResourceIdentifier<ProductType> productType,
                                          final LocalizedString name,
                                          final LocalizedString slug,
                                          final List<ProductVariantDraft> allVariants) {
@@ -68,11 +66,12 @@ public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCre
     }
 
     public static ProductCreateModel of(final SphereClient sphereClient,
-                                         final ResourceIdentifiable<ProductType> productType,
+                                         final ResourceIdentifier<ProductType> productType,
                                          final LocalizedString name,
                                          final LocalizedString slug,
                                          @Nullable final ProductVariantDraft masterVariant) {
-        return of(sphereClient,productType.toResourceIdentifier(),name,slug,masterVariant);
+        return new ProductCreateModel(sphereClient,null, null, null, null, masterVariant, null, null, null, name, productType, null, null, slug, null, null, null);
+
     }
 
 
@@ -121,8 +120,7 @@ public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCre
     }
 
     @Override
-    public Future<Product> toFuture() {
-        ProductDraft draft = build();
-        return getSphereClient().execute(ProductCreateCommand.of(draft)).toCompletableFuture();
+    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
+        return () -> Pair.of(sphereClient,ProductCreateCommand.of(build()));
     }
 }

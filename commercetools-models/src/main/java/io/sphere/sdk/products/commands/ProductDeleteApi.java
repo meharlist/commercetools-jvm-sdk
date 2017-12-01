@@ -1,18 +1,18 @@
 package io.sphere.sdk.products.commands;
 
-import io.sphere.sdk.api.internal.CtFuture;
+import io.sphere.sdk.api.internal.CtPublisher;
 import io.sphere.sdk.client.JsonEndpoint;
 import io.sphere.sdk.client.SphereClient;
+import io.sphere.sdk.client.SphereRequest;
 import io.sphere.sdk.commands.MetaModelByIdDeleteCommandImpl;
 import io.sphere.sdk.models.Versioned;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.expansion.ProductExpansionModel;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
-import static io.sphere.sdk.client.SphereRequestUtils.urlEncode;
-
-public class ProductDeleteApi extends MetaModelByIdDeleteCommandImpl<Product, ProductDeleteCommand, ProductExpansionModel<Product>> implements ProductDeleteCommand , CtFuture<Product> {
+public class ProductDeleteApi extends MetaModelByIdDeleteCommandImpl<Product, ProductDeleteCommand, ProductExpansionModel<Product>> implements ProductDeleteCommand , CtPublisher<Product> {
 
     private final SphereClient sphereClient;
 
@@ -28,9 +28,8 @@ public class ProductDeleteApi extends MetaModelByIdDeleteCommandImpl<Product, Pr
 
 
     @Override
-    public Future<Product> toFuture() {
-        return sphereClient.execute(this).toCompletableFuture();
+    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
+        return () -> Pair.of(sphereClient,this);
     }
-
 
 }

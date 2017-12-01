@@ -1,6 +1,7 @@
 package io.sphere.sdk.products.queries;
 
 import io.sphere.sdk.client.SphereClient;
+import io.sphere.sdk.client.SphereRequest;
 import io.sphere.sdk.http.NameValuePair;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.expansion.ProductExpansionModel;
@@ -8,10 +9,12 @@ import io.sphere.sdk.products.search.PriceSelection;
 import io.sphere.sdk.queries.MetaModelQueryDslBuilder;
 import io.sphere.sdk.queries.MetaModelQueryDslImpl;
 import io.sphere.sdk.queries.PagedQueryResult;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 import static io.sphere.sdk.products.search.PriceSelectionQueryParameters.extractPriceSelectionFromHttpQueryParameters;
 import static io.sphere.sdk.products.search.PriceSelectionQueryParameters.getQueryParametersWithPriceSelection;
@@ -47,7 +50,7 @@ final class ProductQueryImpl extends MetaModelQueryDslImpl<Product, ProductQuery
     }
 
     @Override
-    public Future<PagedQueryResult<Product>> toFuture() {
-        return sphereClient.execute(this).toCompletableFuture();
+    public Supplier<Pair<SphereClient, SphereRequest<PagedQueryResult<Product>>>> clientRequestSupplier() {
+        return () -> Pair.of(sphereClient,this);
     }
 }
