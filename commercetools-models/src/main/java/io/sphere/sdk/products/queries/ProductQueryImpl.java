@@ -50,7 +50,12 @@ final class ProductQueryImpl extends MetaModelQueryDslImpl<Product, ProductQuery
     }
 
     @Override
-    public Supplier<Pair<SphereClient, SphereRequest<PagedQueryResult<Product>>>> clientRequestSupplier() {
-        return () -> Pair.of(sphereClient,this);
+    public SphereClient getSphereClient() {
+        return sphereClient;
+    }
+
+    @Override
+    public SphereRequest<PagedQueryResult<Product>> getSphereRequest() {
+        return this;
     }
 }

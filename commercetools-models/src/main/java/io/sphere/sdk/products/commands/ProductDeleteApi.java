@@ -28,8 +28,12 @@ public class ProductDeleteApi extends MetaModelByIdDeleteCommandImpl<Product, Pr
 
 
     @Override
-    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
-        return () -> Pair.of(sphereClient,this);
+    public SphereClient getSphereClient() {
+        return sphereClient;
     }
 
+    @Override
+    public SphereRequest<Product> getSphereRequest() {
+        return this;
+    }
 }

@@ -174,7 +174,12 @@ public final class ProductImageUploadCommand extends CommandImpl<Product> implem
 
 
     @Override
-    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
-        return () -> Pair.of(sphereClient,this);
+    public SphereClient getSphereClient() {
+        return sphereClient;
+    }
+
+    @Override
+    public SphereRequest<Product> getSphereRequest() {
+        return this;
     }
 }

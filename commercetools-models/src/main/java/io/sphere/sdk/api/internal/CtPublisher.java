@@ -14,23 +14,21 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface CtPublisher<T> extends Publisher<T>{
 
 
-    Supplier<Pair<SphereClient,SphereRequest<T>>> clientRequestSupplier();
+    SphereClient getSphereClient();
+    SphereRequest<T> getSphereRequest();
+
 
     @Override
     default void subscribe(Subscriber<? super T> s) {
-        SphereClient sphereClient = clientRequestSupplier().get().getLeft();
-        SphereRequest<T> sphereRequest = clientRequestSupplier().get().getRight();
-        Flowable.fromFuture(sphereClient.execute(sphereRequest).toCompletableFuture()).subscribe(s);
+
+        Flowable.fromFuture(getSphereClient().execute(getSphereRequest()).toCompletableFuture()).subscribe(s);
     }
 
     default Flowable<T> toFlowable(){
@@ -38,4 +36,7 @@ public interface CtPublisher<T> extends Publisher<T>{
     }
 
 
+    default CompletionStage<T> toCompletionStage(){
+        return getSphereClient().execute(getSphereRequest());
+    }
 }

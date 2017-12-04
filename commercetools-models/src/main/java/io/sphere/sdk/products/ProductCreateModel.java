@@ -115,12 +115,13 @@ public final class ProductCreateModel extends ProductDraftBuilderBase<ProductCre
         return ProductCreateModel.this;
     }
 
-    SphereClient getSphereClient() {
+    @Override
+    public SphereClient getSphereClient() {
         return sphereClient;
     }
 
     @Override
-    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
-        return () -> Pair.of(sphereClient,ProductCreateCommand.of(build()));
+    public SphereRequest<Product> getSphereRequest() {
+        return ProductCreateCommand.of(build());
     }
 }

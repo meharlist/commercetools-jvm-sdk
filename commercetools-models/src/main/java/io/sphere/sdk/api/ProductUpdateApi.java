@@ -9,10 +9,7 @@ import io.sphere.sdk.models.Versioned;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.products.PublishScope;
 import io.sphere.sdk.products.commands.ProductUpdateCommand;
-import io.sphere.sdk.products.commands.updateactions.ChangeName;
-import io.sphere.sdk.products.commands.updateactions.Publish;
-import io.sphere.sdk.products.commands.updateactions.SetKey;
-import io.sphere.sdk.products.commands.updateactions.Unpublish;
+import io.sphere.sdk.products.commands.updateactions.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -70,12 +67,20 @@ public class ProductUpdateApi implements CtPublisher<Product> {
         return ProductUpdateApi.this;
     }
 
+    ProductUpdateApi setDescription(LocalizedString description){
 
-
-    @Override
-    public Supplier<Pair<SphereClient, SphereRequest<Product>>> clientRequestSupplier() {
-        return () -> Pair.of(sphereClient,ProductUpdateCommand.of(versioned, new ArrayList<>(actionsMap.values())));
+        actionsMap.put("SetDescription", SetDescription.of(description));
+        return ProductUpdateApi.this;
     }
 
 
+    @Override
+    public SphereClient getSphereClient() {
+        return sphereClient;
+    }
+
+    @Override
+    public SphereRequest<Product> getSphereRequest() {
+        return ProductUpdateCommand.of(versioned, new ArrayList<>(actionsMap.values()));
+    }
 }
