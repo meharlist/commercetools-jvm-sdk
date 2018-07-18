@@ -25,5 +25,10 @@ final class PriceExpansionModelImpl<T> extends ExpansionModelImpl<T> implements 
     public DiscountedPriceExpansionModel<T> discounted() {
         return new DiscountedPriceExpansionModelImpl<>(pathExpression(), "discounted");
     }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
+    }
 }
 

@@ -9,4 +9,6 @@ public interface PriceExpansionModel<T> {
     ChannelExpansionModel<T> channel();
 
     DiscountedPriceExpansionModel<T> discounted();
+
+    CustomExpansionModel<T> custom();
 }
