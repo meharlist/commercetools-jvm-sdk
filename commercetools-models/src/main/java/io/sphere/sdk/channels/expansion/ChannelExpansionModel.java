@@ -2,6 +2,7 @@ package io.sphere.sdk.channels.expansion;
 
 import io.sphere.sdk.channels.Channel;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface ChannelExpansionModel<T> extends ExpansionPathContainer<T> {
     static <T> ChannelExpansionModel<T> of(final List<String> parentPath, final String path) {
         return new ChannelExpansionModelImpl<>(parentPath, path);
     }
+
+    CustomExpansionModel<T> custom();
 }
