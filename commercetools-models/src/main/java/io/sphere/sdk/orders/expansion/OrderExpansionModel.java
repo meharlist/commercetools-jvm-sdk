@@ -4,6 +4,7 @@ import io.sphere.sdk.carts.expansion.*;
 import io.sphere.sdk.customergroups.expansion.CustomerGroupExpansionModel;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
 import io.sphere.sdk.orders.Order;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 import io.sphere.sdk.states.expansion.StateExpansionModel;
 
 /**
@@ -38,6 +39,9 @@ public interface OrderExpansionModel<T> extends ExpansionPathContainer<T>, CartL
 
     @Override
     ShippingInfoExpansionModel<T> shippingInfo();
+
+    @Override
+    CustomExpansionModel<T> custom();
 
     static OrderExpansionModel<Order> of() {
         return new OrderExpansionModelImpl<>();
