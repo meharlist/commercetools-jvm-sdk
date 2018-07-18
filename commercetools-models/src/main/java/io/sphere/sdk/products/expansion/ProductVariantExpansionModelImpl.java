@@ -11,6 +11,16 @@ final class ProductVariantExpansionModelImpl<T> extends ExpansionModelImpl<T> im
     }
 
     @Override
+    public AssetExpansionModel<T> assets() {
+        return assets("*");
+    }
+
+    @Override
+    public AssetExpansionModel<T> assets(final int index) {
+        return assets("" + index);
+    }
+
+    @Override
     public PriceExpansionModel<T> prices() {
         return prices("*");
     }
@@ -27,6 +37,10 @@ final class ProductVariantExpansionModelImpl<T> extends ExpansionModelImpl<T> im
 
     private PriceExpansionModel<T> prices(final String index) {
         return new PriceExpansionModelImpl<>(pathExpression(), "prices[" + index + "]");
+    }
+
+    private AssetExpansionModel<T> assets(final String index) {
+        return new AssetExpansionModelImpl<>(pathExpression(), "assets[" + index + "]");
     }
 }
 

@@ -2,6 +2,7 @@ package io.sphere.sdk.categories.expansion;
 
 import io.sphere.sdk.categories.Category;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
+import io.sphere.sdk.products.expansion.AssetExpansionModel;
 
 import java.util.List;
 
@@ -16,6 +17,10 @@ public interface CategoryExpansionModel<T> extends ExpansionPathContainer<T> {
     CategoryExpansionModel<T> ancestors();
 
     CategoryExpansionModel<T> parent();
+
+    AssetExpansionModel<T> assets();
+
+    AssetExpansionModel<T> assets(int index);
 
     static CategoryExpansionModel<Category> of() {
         return new CategoryExpansionModelImpl<>();

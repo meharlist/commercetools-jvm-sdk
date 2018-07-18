@@ -8,6 +8,10 @@ public interface ProductVariantExpansionModel<T> {
 
     PriceExpansionModel<T> prices(int index);
 
+    AssetExpansionModel<T> assets();
+
+    AssetExpansionModel<T> assets(int index);
+
     ProductAttributeExpansionModel<T> attributes();
 
     static <T> ProductVariantExpansionModel<T> of(@Nullable final List<String> parentPath, final String paths) {

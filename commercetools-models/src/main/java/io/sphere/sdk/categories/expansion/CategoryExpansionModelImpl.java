@@ -1,6 +1,8 @@
 package io.sphere.sdk.categories.expansion;
 
 import io.sphere.sdk.expansion.ExpansionModelImpl;
+import io.sphere.sdk.products.expansion.AssetExpansionModel;
+import io.sphere.sdk.products.expansion.AssetExpansionModelImpl;
 
 import java.util.List;
 
@@ -26,5 +28,19 @@ final class CategoryExpansionModelImpl<T> extends ExpansionModelImpl<T> implemen
     @Override
     public CategoryExpansionModel<T> parent() {
         return new CategoryExpansionModelImpl<>(pathExpression(), "parent");
+    }
+
+    @Override
+    public AssetExpansionModel<T> assets() {
+        return assets("*");
+    }
+
+    @Override
+    public AssetExpansionModel<T> assets(int index) {
+        return assets("" + index);
+    }
+
+    private AssetExpansionModel<T> assets(final String index) {
+        return new AssetExpansionModelImpl<>(pathExpression(), "assets[" + index + "]");
     }
 }
