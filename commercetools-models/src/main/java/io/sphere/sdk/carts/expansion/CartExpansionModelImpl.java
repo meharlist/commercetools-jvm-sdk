@@ -1,6 +1,7 @@
 package io.sphere.sdk.carts.expansion;
 
 import io.sphere.sdk.customergroups.expansion.CustomerGroupExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 
 import java.util.List;
 
@@ -47,6 +48,9 @@ final class CartExpansionModelImpl<T> extends CartLikeExpansionModelImpl<T> impl
     public ShippingInfoExpansionModel<T> shippingInfo() {
         return super.shippingInfo();
     }
+
+    @Override
+    public CustomExpansionModel<T> custom() { return super.custom(); }
 
     @Override
     public CustomLineItemExpansionModel<T> customLineItems() {

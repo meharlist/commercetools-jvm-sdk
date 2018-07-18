@@ -2,6 +2,7 @@ package io.sphere.sdk.carts.expansion;
 
 import io.sphere.sdk.carts.Cart;
 import io.sphere.sdk.customergroups.expansion.CustomerGroupExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ public interface CartExpansionModel<T> extends CartLikeExpansionModel<T> {
 
     @Override
     ShippingInfoExpansionModel<T> shippingInfo();
+
+    @Override
+    CustomExpansionModel<T> custom();
 
     static CartExpansionModel<Cart> of() {
         return new CartExpansionModelImpl<>();
