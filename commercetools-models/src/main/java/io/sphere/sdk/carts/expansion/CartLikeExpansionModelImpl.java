@@ -2,6 +2,8 @@ package io.sphere.sdk.carts.expansion;
 
 import io.sphere.sdk.customergroups.expansion.CustomerGroupExpansionModel;
 import io.sphere.sdk.expansion.ExpansionModelImpl;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModelImpl;
 
 import java.util.List;
 
@@ -65,6 +67,11 @@ public abstract class CartLikeExpansionModelImpl<T> extends ExpansionModelImpl<T
     @Override
     public ShippingInfoExpansionModel<T> shippingInfo() {
         return new ShippingInfoExpansionModelImpl<>(pathExpression(), "shippingInfo");
+    }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
     }
 
 }

@@ -1,8 +1,8 @@
 package io.sphere.sdk.carts.expansion;
 
-import io.sphere.sdk.carts.ShippingRateInput;
 import io.sphere.sdk.customergroups.expansion.CustomerGroupExpansionModel;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 
 /**
  * Internal base interface
@@ -26,4 +26,6 @@ public interface CartLikeExpansionModel<T> extends ExpansionPathContainer<T> {
     PaymentInfoExpansionModel<T> paymentInfo();
 
     ShippingInfoExpansionModel<T> shippingInfo();
+
+    CustomExpansionModel<T> custom();
 }
