@@ -2,6 +2,8 @@ package io.sphere.sdk.carts.expansion;
 
 import io.sphere.sdk.channels.expansion.ChannelExpansionModel;
 import io.sphere.sdk.expansion.ExpansionModelImpl;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModelImpl;
 import io.sphere.sdk.products.expansion.ProductVariantExpansionModel;
 import io.sphere.sdk.producttypes.expansion.ProductTypeExpansionModel;
 
@@ -58,5 +60,10 @@ final class LineItemExpansionModelImpl<T> extends ExpansionModelImpl<T> implemen
 
     private DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity(final String s) {
         return new DiscountedLineItemPricePerQuantityExpansionModelImpl<>(pathExpression(), "discountedPricePerQuantity[" + s + "]");
+    }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
     }
 }
