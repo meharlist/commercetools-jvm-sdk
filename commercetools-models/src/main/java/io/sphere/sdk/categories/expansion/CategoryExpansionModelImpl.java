@@ -3,6 +3,8 @@ package io.sphere.sdk.categories.expansion;
 import io.sphere.sdk.expansion.ExpansionModelImpl;
 import io.sphere.sdk.products.expansion.AssetExpansionModel;
 import io.sphere.sdk.products.expansion.AssetExpansionModelImpl;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModelImpl;
 
 import java.util.List;
 
@@ -38,6 +40,11 @@ final class CategoryExpansionModelImpl<T> extends ExpansionModelImpl<T> implemen
     @Override
     public AssetExpansionModel<T> assets(int index) {
         return assets("" + index);
+    }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
     }
 
     private AssetExpansionModel<T> assets(final String index) {
