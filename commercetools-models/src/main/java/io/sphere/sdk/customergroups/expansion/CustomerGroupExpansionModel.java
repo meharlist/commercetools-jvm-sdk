@@ -2,6 +2,7 @@ package io.sphere.sdk.customergroups.expansion;
 
 import io.sphere.sdk.customergroups.CustomerGroup;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ import java.util.List;
  @param <T> the type for which the expansion path is
  */
 public interface CustomerGroupExpansionModel<T> extends ExpansionPathContainer<T> {
+    CustomExpansionModel<T> custom();
+
     static CustomerGroupExpansionModel<CustomerGroup> of() {
         return new CustomerGroupExpansionModelImpl<>();
     }
