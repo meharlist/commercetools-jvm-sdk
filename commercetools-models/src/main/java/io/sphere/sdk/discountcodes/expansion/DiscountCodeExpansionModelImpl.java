@@ -3,6 +3,8 @@ package io.sphere.sdk.discountcodes.expansion;
 import io.sphere.sdk.cartdiscounts.expansion.CartDiscountExpansionModel;
 import io.sphere.sdk.expansion.ExpansionModelImpl;
 import io.sphere.sdk.expansion.ExpansionPathContainer;
+import io.sphere.sdk.products.expansion.CustomExpansionModel;
+import io.sphere.sdk.products.expansion.CustomExpansionModelImpl;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,5 +26,10 @@ final class DiscountCodeExpansionModelImpl<T> extends ExpansionModelImpl<T> impl
     @Override
     public ExpansionPathContainer<T> references() {
         return expansionPath("references[*]");
+    }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
     }
 }
