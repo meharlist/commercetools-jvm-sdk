@@ -8,4 +8,9 @@ public final class AssetExpansionModelImpl<T> extends ExpansionModelImpl<T> impl
     public AssetExpansionModelImpl(final List<String> parentPath, final String path) {
         super(parentPath, path);
     }
+
+    @Override
+    public CustomExpansionModel<T> custom() {
+        return new CustomExpansionModelImpl<>(pathExpression(), "custom");
+    }
 }
